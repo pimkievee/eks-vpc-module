@@ -12,6 +12,6 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-  #profile = "eks-master"
+  profile = "eks-master"
 
 }
