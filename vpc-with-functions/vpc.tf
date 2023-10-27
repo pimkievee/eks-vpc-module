@@ -45,10 +45,10 @@ resource "aws_nat_gateway" "nat" {
 #5. Create private subnet
 
 resource "aws_subnet" "private" {
-  count                   = length(var.private_cidr)
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = element(var.private_cidr, count.index)
-  availability_zone       = element(var.availability_zone, count.index)
+  count             = length(var.private_cidr)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = element(var.private_cidr, count.index)
+  availability_zone = element(var.availability_zone, count.index)
 
   tags = {
     "Name"                            = "private"

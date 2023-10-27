@@ -10,7 +10,7 @@ resource "aws_eks_node_group" "nodes" {
   cluster_name    = aws_eks_cluster.demo.name
   node_group_name = "nodes"
   node_role_arn   = data.terraform_remote_state.network.outputs.node_role
-  
+
   subnet_ids = [
     #aws_subnet.public[0].id,aws_subnet.public.[1].id,
     data.terraform_remote_state.network.outputs.private[0], data.terraform_remote_state.network.outputs.private[1]
