@@ -1,12 +1,12 @@
 variable "username" {
-  type = list(any)
-  default = [ "developer1", "manager" ]
+  type    = list(any)
+  default = ["developer1", "manager"]
 }
 
 variable "env" {
-  type = list(any)
+  type    = list(any)
   default = ["Development", "production"]
-  }
+}
 
 variable "tags" {
   type = map(string)
