@@ -40,7 +40,7 @@ data "aws_iam_policy_document" "masters" {
 
 data "aws_iam_policy_document" "masters_assume_role" {
   statement {
-    sid    = "AllowAccountAssumeRole"
+    sid    = "AllowMasterAssumeRole"
     effect = "Allow"
     actions = [
       "sts:AssumeRole",
@@ -48,25 +48,27 @@ data "aws_iam_policy_document" "masters_assume_role" {
     principals {
       type = "AWS"
       # When you are addind a group to a the the principle you use an account instead of the arn
-      #identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/manager"] #( this is for a user)
-      identifiers = [data.aws_caller_identity.current.account_id]
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/master"] #( this is for a user)
+      #identifiers = [data.aws_caller_identity.current.account_id]
       #identifiers = ["data.aws_caller_identity.current.account_id]
     }
   }
 }
 
 # am passing this just as an policy not an assume_role policy big difference..  ( am passinfg my role as a resources)
-data "aws_iam_policy_document" "masters_role" {
+/*data "aws_iam_policy_document" "masters_role" {
   statement {
     sid     = "AllowMastersAssumeRole"
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
     # When you are addind a group to a the the principle you use an account instead of the arn
-    resources = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/masters-eks-Role"] #( this is for a user)
+   resources = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/masters-eks-Role"] #( this is for a user)
     #identifiers = [data.aws_caller_identity.current.account_id]
   }
 }
-
+*/
 data "aws_caller_identity" "current" {}
 
-
+#master
+#AKIAUZF4MAIKRZVVL3PM
+#GXQorkeZxqFR5Ga+DKhNaWWrqev+jtgO2cxrez3+

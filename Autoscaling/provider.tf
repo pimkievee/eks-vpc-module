@@ -1,4 +1,7 @@
-# Terraform block
+provider "aws" {
+  region = "us-east-1"
+}
+
 terraform {
   required_providers {
     aws = {
@@ -8,21 +11,10 @@ terraform {
   }
 }
 
-#provider block
-provider "aws" {
-  region = "us-east-1"
-
-}
-
-
 
 data "terraform_remote_state" "network" {
   backend = "local"
   config = {
-    path = "../cluster/terraform.tfstate"
+    path = "../oidc-test/terraform.tfstate"
   }
 }
-
-
-
-

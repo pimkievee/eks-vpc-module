@@ -23,6 +23,10 @@ resource "aws_iam_group" "eks_masters" {
 }
 
 
+resource "aws_iam_group" "eks_developer" {
+  name = "Developer"
+
+}
 resource "aws_iam_group_policy" "masters_policy" {
   name   = "masters"
   group  = aws_iam_group.eks_masters.name
@@ -31,7 +35,7 @@ resource "aws_iam_group_policy" "masters_policy" {
 
 resource "aws_iam_group_membership" "masters_team" {
   name  = "masters-group-membership"
-  users = /*[for user in aws_iam_user.eks_user : user.name]*/ [aws_iam_user.eks_user[0].name, aws_iam_user.eks_user[1].name]
+  users = /*[for user in aws_iam_user.eks_user : user.name]*/ [aws_iam_user.eks_user[0].name, aws_iam_user.eks_user[1].name, aws_iam_user.eks_user[2].name]
   group = aws_iam_group.eks_masters.name
 }
 

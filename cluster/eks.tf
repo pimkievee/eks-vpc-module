@@ -10,5 +10,4 @@ resource "aws_eks_cluster" "demo" {
 
     ]
   }
-
 }

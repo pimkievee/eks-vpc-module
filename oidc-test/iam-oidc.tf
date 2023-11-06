@@ -16,8 +16,9 @@ resource "aws_iam_policy" "test-policy" {
   policy = jsonencode({
     Statement = [{
       Action = [
-        "s3:List*",
-        "ec2:*"
+        "s3:*",
+        "s3:ListAllMyBuckets",
+        "s3:GetBuckectLocation"
       ]
       Effect   = "Allow"
       Resource = "*"
