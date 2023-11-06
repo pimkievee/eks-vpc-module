@@ -69,6 +69,3 @@ data "aws_iam_policy_document" "masters_assume_role" {
 */
 data "aws_caller_identity" "current" {}
 
-#master
-#AKIAUZF4MAIKRZVVL3PM
-#GXQorkeZxqFR5Ga+DKhNaWWrqev+jtgO2cxrez3+
