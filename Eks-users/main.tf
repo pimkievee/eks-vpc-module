@@ -68,3 +68,8 @@ resource "aws_iam_policy" "eks_admin" {
   name   = "eks-masters"
   policy = data.aws_iam_policy_document.masters.json
 }
+
+#resource "aws_iam_role_policy_attachment" "admin_policy_detach" {
+  #role       = aws_iam_role.masters.name
+ # policy_arn = "YOUR_POLICY_ARN_HERE" # Replace with the ARN of the policy you want to detach
+#}

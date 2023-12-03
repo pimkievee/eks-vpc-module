@@ -1,3 +1,4 @@
+
 data "aws_iam_policy_document" "eks_cluster_autoscaler_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
@@ -9,21 +10,20 @@ data "aws_iam_policy_document" "eks_cluster_autoscaler_assume_role_policy" {
       values   = ["system:serviceaccount:kube-system:cluster-autoscaler"]
     }
 
-
     principals {
       identifiers = [data.terraform_remote_state.network.outputs.oidc-arn]
       type        = "Federated"
     }
   }
 }
+
 resource "aws_iam_role" "eks_cluster_autoscaler" {
   assume_role_policy = data.aws_iam_policy_document.eks_cluster_autoscaler_assume_role_policy.json
-  name               = "eks_cluster_autoscaler"
+  name               = "eks-cluster-autoscaler"
 }
 
-
 resource "aws_iam_policy" "eks_cluster_autoscaler" {
-  name = "eks_cluster_autoscaler"
+  name = "eks-cluster-autoscaler"
 
   policy = jsonencode({
     Statement = [{
@@ -33,9 +33,9 @@ resource "aws_iam_policy" "eks_cluster_autoscaler" {
         "autoscaling:DescribeLaunchConfigurations",
         "autoscaling:DescribeTags",
         "autoscaling:SetDesiredCapacity",
-        "autoscaling:TerminateInstanceAutoScalingGroups",
+        "autoscaling:TerminateInstanceInAutoScalingGroup",
         "ec2:DescribeLaunchTemplateVersions",
-        "ec2:DescribeInstancesTypes"
+        "ec2:DescribeInstanceTypes"
       ]
       Effect   = "Allow"
       Resource = "*"
@@ -48,3 +48,5 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_autoscaler_attach" {
   role       = aws_iam_role.eks_cluster_autoscaler.name
   policy_arn = aws_iam_policy.eks_cluster_autoscaler.arn
 }
+
+
