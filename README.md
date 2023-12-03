@@ -111,14 +111,18 @@ EFS CSI Driver: Install the EFS CSI driver to enable EFS support for persistent 
 
 Access Grafana dashboard and configure Prometheus for monitoring your cluster and applications.
 
-<span style="font-size: larger;">Directory Structure</span>
+Directory Structure
+
+br
 
 /scripts: Deployment scripts and automation tools.
 /config: Configuration files for VPC, IAM, Kubernetes manifests, etc.
 /istio: Istio installation and configuration files.
-/helm-charts: Helm chart configurations for Prometheus, Grafana, etc.
+/helm-charts: Helm chart configurations for Prometheus, Grafana, etc. br br
+
 Troubleshooting
 If you encounter issues during deployment or configuration, please refer to the troubleshooting section in the specific component's documentation or raise an issue in this repository for assistance.
+br br
 
 Contributing
 Contributions are welcome! If you'd like to contribute, please fork the repository, make your changes, and submit a pull request.
