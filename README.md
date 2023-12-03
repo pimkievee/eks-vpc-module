@@ -86,3 +86,37 @@ resource "aws_iam_role_policy_attachment" "main-cluster-AmazonEKSServicePolicy" 
 
    ```bash
    git clone https://github.com/pimkievee/eks-vpc-module/
+
+
+
+
+   Setup AWS Credentials:
+
+Ensure AWS CLI is properly configured with necessary permissions.
+
+Deploy the VPC and EKS Cluster:
+
+Modify configuration files as needed (e.g., VPC settings, IAM roles) and execute deployment scripts.
+
+Install Istio:
+
+Use Istio installation files and follow the provided instructions to install Istio into the cluster.
+
+Deploy Add-ons:
+
+Prometheus and Grafana: Use Helm to install Prometheus and Grafana monitoring tools.
+EFS CSI Driver: Install the EFS CSI driver to enable EFS support for persistent volumes.
+Configure Monitoring and Metrics:
+
+Access Grafana dashboard and configure Prometheus for monitoring your cluster and applications.
+
+Directory Structure
+/scripts: Deployment scripts and automation tools.
+/config: Configuration files for VPC, IAM, Kubernetes manifests, etc.
+/istio: Istio installation and configuration files.
+/helm-charts: Helm chart configurations for Prometheus, Grafana, etc.
+Troubleshooting
+If you encounter issues during deployment or configuration, please refer to the troubleshooting section in the specific component's documentation or raise an issue in this repository for assistance.
+
+Contributing
+Contributions are welcome! If you'd like to contribute, please fork the repository, make your changes, and submit a pull request.
