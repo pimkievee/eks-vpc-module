@@ -1,58 +1,88 @@
 # EKS CLUSTER WITH CUSTOM VPC
+
 ## Read! EKS: Requirements 
 
-**VPC**: 
-- Must have a minimun of 2-4 subnets in differentAZs 2 public, 2 private - VPC must be tagged
+### VPC
+- Must have a minimum of 2-4 subnets in different AZs (2 public, 2 private). VPC must be tagged.
 
-**Subnet:** 
+### Subnet
+- Subnets have to be tagged for ALB
+  ```tags = { Name = "public" "kubernetes.io/role/elb" = "1" "kubernete.io/cluster/demo" = "owned" or "shared" }```
+- VPC needs DNS hostname support.
+- VPC needs DNS resolution.
 
-- Subnets have to be tagged for alb
-
-```tags = { Name = "public" "kubernetes.io/role/elb" = "1" "kubernete.io/cluster/demo" = "owned" or "shared" }```
-
-- VPC needs DNS host name support
-- VPC needs DNS resolution
----
-Cluster IAM roles:
----
-- EKS makes api calls to other services, Iam with AmazonEKSClusterPolicy is attached.
-- The role needs to have the principal as eks.amazonaws.com service to assume it.
-
-```
-resource "aws_iam_role" "demo" { name = "eks-cluster-demo"
-
-assume_role_policy = <<POLICY { "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": { "Service": "eks.amazonaws.com" }, "Action": "sts:AssumeRole" } ] } POLICY } 
-```
-
-- 2 other policies need to be attached to this role.
-- The policies must be amazon managed policies and not customer managed policies.
-
-```
-resource "aws_iam_role_policy_attachment" "demo-AmazonEKSClusterPolicy" { policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy" role = aws_iam_role.demo.name }
-
-resource "aws_iam_role_policy_attachment" "main-cluster-AmazonEKSServicePolicy" { policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy" role = aws_iam_role.demo.name } 
-```
----
-Node groups:
 ---
 
-- Role for creating nodes with permissions
-policies attached to the role MUST be amazon managed policies. The principal to assume the role must be ec2.amazonaws.com as a service.
-- Policies must be attached to the role.
-```
-resource "aws_iam_role" "nodes" { name = "eks-nodes-demo"
+## EKS Deployment Steps
 
-assume_role_policy = <<POLICY { "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": { "Service": "ec2.amazonaws.com" }, "Action": "sts:AssumeRole" } ] } POLICY }
+This repository contains configurations and scripts for deploying a custom Virtual Private Cloud (VPC) with an Amazon EKS cluster, Istio service mesh, various add-ons, and integrations.
 
-esource "aws_iam_role_policy_attachment" "nodes-AmazonEKSWorkerNodePolicy" { policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy" role = aws_iam_role.nodes.name }
+### Features
 
-resource "aws_iam_role_policy_attachment" "nodes-AmazonEKS_CNI_Policy" { policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy" role = aws_iam_role.nodes.name }
+- **Amazon EKS Cluster**: Managed Kubernetes cluster for container orchestration.
+- **Istio Service Mesh**: A service mesh to manage microservices communication and security.
+- **IAM Roles for Service Accounts (IRSA)**: Integrates IAM roles with Kubernetes service accounts.
+- **Horizontal Pod Autoscaler**: Automatically adjusts the number of Kubernetes pods.
+- **OpenID Connect (OIDC)**: Authentication method allowing IAM users to access the cluster.
+- **Prometheus**: Monitoring and alerting toolkit for containerized environments.
+- **Grafana**: Visualization and analytics platform for monitoring metrics.
+- **Helm**: Package manager for Kubernetes applications.
+- **EFS CSI Driver**: Amazon Elastic File System Container Storage Interface driver.
+- **CNI (Container Networking Interface)**: Network plugin to enable networking between containers.
 
-resource "aws_iam_role_policy_attachment" "nodes-AmazonEC2ContainerRegistryReadOnly" { policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly" role = aws_iam_role.nodes.name }
+### Prerequisites
 
-resource "aws_iam_role_policy_attachment" "main-node-AmazonEC2FullAccess" { policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess" role = aws_iam_role.nodes.name } 
-```
+- AWS CLI installed and configured with appropriate permissions.
+- `kubectl` CLI installed for Kubernetes cluster management.
+- Helm v3 installed for package management.
+- Istio installation files and configurations.
+
+### Directory Structure
+
+- `/scripts`: Deployment scripts and automation tools.
+- `/config`: Configuration files for VPC, IAM, Kubernetes manifests, etc.
+- `/istio`: Istio installation and configuration files.
+- `/helm-charts`: Helm chart configurations for Prometheus, Grafana, etc.
+
+---
+
+## Cluster IAM roles
+
+- EKS makes API calls to other services; IAM with `AmazonEKSClusterPolicy` is attached.
+- The role needs to have the principal as `eks.amazonaws.com` service to assume it.
+```hcl
+resource "aws_iam_role" "demo" {
+  name = "eks-cluster-demo"
+  assume_role_policy = <<POLICY
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "eks.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  }
+  POLICY
+}
+
+resource "aws_iam_role_policy_attachment" "demo-AmazonEKSClusterPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+  role = aws_iam_role.demo.name
+}
+
+resource "aws_iam_role_policy_attachment" "main-cluster-AmazonEKSServicePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
+  role = aws_iam_role.demo.name
+}
 
 
-The credentials used to provision the EKS are the authorized credentials to modify or edit the configMap. aws-auth cm 
+## Deployment Steps
 
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/pimkievee/eks-vpc-module/
